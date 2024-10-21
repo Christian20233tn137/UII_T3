@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Tareas</title>
+</head>
+<body>
+<h1>Lista de Tareas</h1>
+
+<form action="/tareas/agregar" method="post" th:object="${tarea}">
+    <input type="text" th:field="*{nombre}" placeholder="Nombre" required />
+    <input type="text" th:field="*{descripcion}" placeholder="Descripción" required />
+    <input type="text" th:field="*{fecha}" placeholder="Fecha (dd/mm/yyyy)" required />
+    <input type="checkbox" th:field="*{pendiente}" /> Pendiente
+    <button type="submit">Agregar Tarea</button>
+</form>
+
+<h2>Tareas Pendientes</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Fecha</th>
+        <th>Pendiente</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="tarea : ${tareas}">
+        <td th:text="${tarea.id}"></td>
+        <td th:text="${tarea.nombre}"></td>
+        <td th:text="${tarea.descripcion}"></td>
+        <td th:text="${tarea.fecha}"></td>
+        <td th:text="${tarea.pendiente} ? 'Sí' : 'No'"></td>
+        <td>
+            <form action="/tareas/eliminar/{id}" method="post" th:action="@{/tareas/eliminar/{id}(id=${tarea.id})}">
+                <button type="submit">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<form action="/tareas/limpiar" method="post">
+    <button type="submit">Limpiar Lista</button>
+</form>
+
+<form action="/tareas/exportar" method="post">
+    <button type="submit">Exportar a Archivo</button>
+</form>
+
+<div>
+    <h3>Total de Tareas Pendientes: <span th:text="${tareas.size()}"></span></h3>
+</div>
+</body>
+</html>
